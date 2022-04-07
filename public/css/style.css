@@ -1082,11 +1082,11 @@ table tr:hover .table-links {
 
 .badge {
   vertical-align: middle;
-  padding: 7px 12px;
+  padding: 6px 10px;
   font-weight: 600;
   letter-spacing: .3px;
   border-radius: 30px;
-  font-size: 12px; }
+  font-size: 10px; }
   .badge.badge-warning {
     color: #fff; }
   .badge.badge-primary {

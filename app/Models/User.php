@@ -22,6 +22,11 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+    
+    function prodi()
+    {
+         return $this->BelongsTo('App\Models\Prodi','prodi_id');
+    }
 
     /**
      * The attributes that should be hidden for serialization.

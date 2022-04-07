@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Yajra\Datatables\Datatables;
 use App\Models\User;
-use App\Models\Mahasiswa;
+use App\Models\Prodi;
 use Validator;
 
 class PenggunaController extends Controller
@@ -14,7 +14,7 @@ class PenggunaController extends Controller
      public function index(Request $request)
      {
           if ($request->ajax()) {
-               $data = User::orderBy('created_at','desc')->get();
+               $data = User::with('prodi')->orderBy('created_at','desc')->get();
                return Datatables::of($data)
                     ->addIndexColumn()
                     ->editColumn('aksi', function($row) {
@@ -26,7 +26,11 @@ class PenggunaController extends Controller
                          return $data;
                     })
                     ->editColumn('roles', function($row) {
-                         return ucwords($row->roles);
+                         if($row->roles == 'prodi'){
+                              return '<span class="badge badge-primary">'.ucwords($row->roles).' : '.$row->prodi->nama.'</span>';
+                         }else{
+                              return  '<span class="badge badge-primary">'.ucwords($row->roles).'</span>';
+                         }
                     })
                     ->editColumn('status', function($row) {
                          return ucwords($row->status);
@@ -34,9 +38,9 @@ class PenggunaController extends Controller
                     ->escapeColumns([])
                     ->make(true);
           }
-          $mahasiswa = Mahasiswa::get();
+          $prodi = Prodi::get();
           return view('pages.pengguna.index')
-          ->with('mahasiswa',$mahasiswa);
+          ->with('prodi',$prodi);
      }
 
      public function simpan(Request $request)
@@ -46,7 +50,7 @@ class PenggunaController extends Controller
                $validator = Validator::make($request->all(), [
                          'name'         => 'required|unique:users,name',
                          'email'        => 'required|email|unique:users,email',
-                         'password'        => 'required|min:6'
+                         'password'        => 'required'
                     ],
                     [
                          'unique'       => 'Data sudah tersimpan didatabase',
@@ -64,6 +68,13 @@ class PenggunaController extends Controller
                     $data->password = bcrypt($request->input('password'));
                     $data->roles = $request->input('roles');
                     $data->status = $request->input('status');
+                    if($request->input('roles') == 'prodi')
+                    {
+                         $data->prodi_id = $request->input('prodi_id');
+                    }else{
+                         $data->prodi_id = 0;
+                    }
+                    
                     $data->created_at = now();
                     
                     
@@ -98,7 +109,7 @@ class PenggunaController extends Controller
                $validator = Validator::make($request->all(), [
                          'name'         => 'required|unique:users,name,'.$request->input('id'),
                          'email'        => 'required|email|unique:users,email,'.$request->input('id'),
-                         'password'        => 'nullable|min:6'
+                         'password'        => 'nullable'
                     ],
                     [
                          'unique'       => 'Data sudah tersimpan didatabase',
@@ -118,6 +129,13 @@ class PenggunaController extends Controller
                     }
                     $data->roles = $request->input('roles');
                     $data->status = $request->input('status');
+
+                    if($request->input('roles') == 'prodi')
+                    {
+                         $data->prodi_id = $request->input('prodi_id');
+                    }else{
+                         $data->prodi_id = 0;
+                    }
 
                     $data->updated_at = now();
                     

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Yajra\Datatables\Datatables;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Prodi;
+use App\Imports\ProdiImport;
 use Validator;
 
 class ProdiController extends Controller
@@ -24,6 +26,16 @@ class ProdiController extends Controller
 
                          return $data;
                     })
+                    ->editColumn('keterangan', function($row) {
+                        if($row->keterangan != null)
+                        {
+                             $data =  $row->keterangan;
+                        }else{
+                             $data = '-';
+                        }
+
+                         return $data;
+                    })
                     ->escapeColumns([])
                     ->make(true);
           }
@@ -35,16 +47,10 @@ class ProdiController extends Controller
           if($request->input())
           {
                $validator = Validator::make($request->all(), [
-                         'nama'         => 'required|unique:customer,nama',
-                         'email'        => 'nullable|email|unique:customer,email',
-                         'no_hp'        => 'nullable|numeric|min:11'
+                         'nama'         => 'required',
                     ],
                     [
-                         'unique'       => 'Data sudah tersimpan didatabase',
                          'required'     => 'Tidak boleh kosong',
-                         'email'        => 'Alamat email tidak valid',
-                         'numeric'      => 'Hanya boleh menginput angka',
-                         'min'          => 'Minimal 11 angka',
                     ]
                );
                
@@ -52,12 +58,9 @@ class ProdiController extends Controller
                if ($validator->passes()) {
                     $data = new Prodi();
                     $data->nama = $request->input('nama');
-                    $data->email = $request->input('email');
-                    $data->no_hp = $request->input('no_hp');
-                    $data->jenis_kelamin = $request->input('jenis_kelamin');
+                    $data->keterangan = $request->input('keterangan');
                     $data->created_at = now();
-                    
-                    
+
                     if($data->save()){
                          $msg = array(
                               'success' => true, 
@@ -87,26 +90,17 @@ class ProdiController extends Controller
           if($request->input())
           {
                $validator = Validator::make($request->all(), [
-                         'nama'         => 'required|unique:customer,nama,'.$request->input('id'),
-                         'email'        => 'nullable|email|unique:customer,email,'.$request->input('id'),
-                         'no_hp'        => 'nullable|numeric|min:11'
+                         'nama'         => 'required',
                     ],
                     [
-                          'unique'       => 'Data sudah tersimpan didatabase',
                          'required'     => 'Tidak boleh kosong',
-                         'email'        => 'Alamat email tidak valid',
-                         'numeric'      => 'Hanya boleh menginput angka',
-                         'min'          => 'Minimal 11 angka',
                     ]
                );
           
                if ($validator->passes()) {
                     $data = Prodi::find($request->input('id'));
                     $data->nama = $request->input('nama');
-                    $data->email = $request->input('email');
-                    $data->no_hp = $request->input('no_hp');
-                    $data->jenis_kelamin = $request->input('jenis_kelamin');
-
+                    $data->keterangan = $request->input('keterangan');
                     $data->updated_at = now();
                     
 
@@ -177,34 +171,34 @@ class ProdiController extends Controller
                $data['status'] = false;
           endif;
 
-          if ($validator->errors()->has('email')):
-               $data['input_error'][] = 'email';
-               $data['error_string'][] = $validator->errors()->first('email');
-               $data['status'] = false;
-               $data['class_string'][] = 'is-invalid';
-          else:
-               $data['input_error'][] = 'email';
-               $data['error_string'][] = '';
-               $data['class_string'][] = 'is-valid';
-               $data['status'] = false;
-          endif;
-
-          if ($validator->errors()->has('no_hp')):
-               $data['input_error'][] = 'no_hp';
-               $data['error_string'][] = $validator->errors()->first('no_hp');
-               $data['status'] = false;
-               $data['class_string'][] = 'is-invalid';
-          else:
-               $data['input_error'][] = 'no_hp';
-               $data['error_string'][] = '';
-               $data['class_string'][] = 'is-valid';
-               $data['status'] = false;
-          endif;
-
-
           return $data;
      }
 
+     public function upload(Request $request) 
+	{
+		$this->validate($request, [
+			'file' => 'required|mimes:xls,xlsx'
+		]);
+ 
+		$file = $request->file('file');
+		$nama_file = rand().$file->getClientOriginalName();
+          $path = $file->storeAs('public/excel/upload/prodi/',$nama_file);
+		$data = Excel::import(new ProdiImport, storage_path('app/public/excel/upload/prodi/'.$nama_file));
 
-    
+          if($data){
+               $msg = array(
+                    'success' => true, 
+                    'message' => 'Data berhasil diupload!',
+                    'status' => TRUE
+               );
+               return response()->json($msg);
+          }else{
+               $msg = array(
+                    'success' => false, 
+                    'message' => 'Data gagal diupload!',
+                    'status' => TRUE
+               );
+               return response()->json($msg);
+          }
+	}
 }

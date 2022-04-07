@@ -9,4 +9,8 @@ class Prodi extends Model
 {
      use SoftDeletes;
      protected $table = 'prodi';
+
+     protected $fillable = [
+          'id','nama','keterangan'
+      ];
 }

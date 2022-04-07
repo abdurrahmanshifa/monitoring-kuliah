@@ -18,19 +18,19 @@
                                    <select name="roles" class="form-control select2">
                                         <option value="admin">Admin</option>
                                         <option value="prodi">Prodi</option>
-                                        <option value="mahasiswa">Mahasiswa</option>
                                    </select>
                                    <div class="invalid-feedback">
                                    </div>
                               </div>
                          </div>
                          <div class="form-group row mb-4 mahasiswa" style="display:none">
-                              <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Mahasiswa</label>
+                              <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Prodi</label>
                               <div class="col-sm-12 col-md-9">
-                                   <select name="id_mahasiswa" class="form-control select2">
-                                        @foreach($mahasiswa as $val)
+                                   <select name="prodi_id" class="form-control select2">
+                                        <option value="0">Pilih Prodi</option>
+                                        @foreach($prodi as $val)
                                              <option value="{{ $val->id }}">
-                                                  {{ $val->nim.' - '.$val->nama }}
+                                                 {{ $val->nama }}
                                              </option>
                                         @endforeach
                                    </select>
@@ -38,22 +38,20 @@
                                    </div>
                               </div>
                          </div>
-                         <div class="informasi">
-                              <div class="form-group row mb-4">
-                                   <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Nama <span class="text-danger">*</span></label>
-                                   <div class="col-sm-12 col-md-9">
-                                        <input type="hidden" name="id">
-                                        <input class="form-control" type="text" name="name">
-                                        <div class="invalid-feedback">
-                                        </div>
+                         <div class="form-group row mb-4">
+                              <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Nama <span class="text-danger">*</span></label>
+                              <div class="col-sm-12 col-md-9">
+                                   <input type="hidden" name="id">
+                                   <input class="form-control" type="text" name="name">
+                                   <div class="invalid-feedback">
                                    </div>
                               </div>
-                              <div class="form-group row mb-4">
-                                   <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Email<span class="text-danger">*</span></label>
-                                   <div class="col-sm-12 col-md-9">
-                                        <input class="form-control" type="text" name="email">
-                                        <div class="invalid-feedback">
-                                        </div>
+                         </div>
+                         <div class="form-group row mb-4">
+                              <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Email<span class="text-danger">*</span></label>
+                              <div class="col-sm-12 col-md-9">
+                                   <input class="form-control" type="text" name="email">
+                                   <div class="invalid-feedback">
                                    </div>
                               </div>
                          </div>

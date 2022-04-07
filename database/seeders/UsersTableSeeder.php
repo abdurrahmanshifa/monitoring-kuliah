@@ -17,7 +17,7 @@ class UsersTableSeeder extends Seeder
             'name'	    => 'Abdurrahman Shifa',
             'email'	    => 'abdurrahmanshifa@gmail.com',
             'password'	=> bcrypt('123'),
-            'roles'     => 'admin',
+            'roles'     => 'mahasiswa',
             'status'    => 'aktif',
         ]);
     }

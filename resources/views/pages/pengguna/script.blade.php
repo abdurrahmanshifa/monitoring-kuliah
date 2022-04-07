@@ -31,13 +31,11 @@
 
      $("[name='roles']").change(function(){
           var id = $(this).val();
-          if(id == 'mahasiswa')
+          if(id == 'prodi')
           {
                $('.mahasiswa').attr('style','display:flex');
-               $('.informasi').attr('style','display:none');
           }else{
                $('.mahasiswa').attr('style','display:none');
-               $('.informasi').attr('style','display:block');
           }
      });
 
@@ -122,7 +120,6 @@
           $('[name="roles"]').val('admin').change();
           $('.info').html('');
           $('.mahasiswa').attr('style','display:none');
-               $('.informasi').attr('style','display:block');
      });
 
      function ubah(id)
@@ -134,7 +131,7 @@
           $('.invalid-feedback').html('');
 
           $.ajax({
-               url : "{{url('master/user/data/')}}"+"/"+id,
+               url : "{{url('master/pengguna/data/')}}"+"/"+id,
                type: "GET",
                dataType: "JSON",
                success: function(data){
@@ -168,7 +165,7 @@
           }).then((result) => {
                if (result.value) {
                     $.ajax({
-                         url : "{{url('master/user/hapus/')}}"+"/"+id,
+                         url : "{{url('master/pengguna/hapus/')}}"+"/"+id,
                          type: "POST",
                          data : {
                               '_method'   : 'delete',

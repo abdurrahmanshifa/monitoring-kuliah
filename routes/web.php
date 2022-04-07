@@ -35,12 +35,14 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
             Route::post('mahasiswa/ubah', [MahasiswaController::class, 'ubah'])->name('master.mahasiswa.ubah');
             Route::get('mahasiswa/data/{id}', [MahasiswaController::class, 'data'])->name('master.mahasiswa.data');
             Route::delete('mahasiswa/hapus/{id}', [MahasiswaController::class, 'hapus'])->name('master.mahasiswa.hapus');
+            Route::post('mahasiswa/upload', [MahasiswaController::class, 'upload'])->name('master.mahasiswa.upload');
             
             Route::get('prodi', [ProdiController::class, 'index'])->name('master.prodi');
             Route::post('prodi/simpan', [ProdiController::class, 'simpan'])->name('master.prodi.simpan');
             Route::post('prodi/ubah', [ProdiController::class, 'ubah'])->name('master.prodi.ubah');
             Route::get('prodi/data/{id}', [ProdiController::class, 'data'])->name('master.prodi.data');
             Route::delete('prodi/hapus/{id}', [ProdiController::class, 'hapus'])->name('master.prodi.hapus');
+            Route::post('prodi/upload', [ProdiController::class, 'upload'])->name('master.prodi.upload');
     
             Route::get('pengguna', [PenggunaController::class, 'index'])->name('master.pengguna');
             Route::post('pengguna/simpan', [PenggunaController::class, 'simpan'])->name('master.pengguna.simpan');

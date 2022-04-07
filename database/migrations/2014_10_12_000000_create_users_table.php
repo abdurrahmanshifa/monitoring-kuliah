@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->integer('prodi_id')->nullable()->default(0);
             $table->enum('roles',['admin','prodi','mahasiswa']);
             $table->enum('status',['aktif','tidak aktif'])->default('aktif');
             $table->rememberToken();

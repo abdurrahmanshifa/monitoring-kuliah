@@ -2,17 +2,17 @@
 
 @section('title')
      <title>
-          Master Customer - Sistem Monitoring Perkuliahan
+          Master Mahasiswa - Sistem Monitoring Perkuliahan
      </title>
 @endsection
 
 @section('content')
 <section class="section">
      <div class="section-header">
-          <h1>Customer</h1>
+          <h1>Mahasiswa</h1>
           <div class="section-header-breadcrumb">
                <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-               <div class="breadcrumb-item">Customer</div>
+               <div class="breadcrumb-item">Mahasiswa</div>
           </div>
      </div>
 
@@ -30,6 +30,12 @@
                                    </button>
                               </h4>
                               <div class="card-header-form">
+                                   <a class="btn btn-icon btn-warning" href="{{ url('public/excel/upload-mahasiswa.xlsx') }}" title="Download Template Excel">
+                                        <i class="fas fa-file-excel"></i> Download Template Excel
+                                   </a>
+                                   <button class="btn btn-icon btn-success upload">
+                                        <i class="fas fa-upload"></i> Upload Template Excel
+                                   </button>
                                    <a data-collapse="#mycard-collapse" class="btn btn-icon btn-info" href="#"><i class="fas fa-minus"></i></a>
                               </div>
                          </div>
@@ -41,9 +47,11 @@
                                                   <thead>
                                                        <tr>
                                                             <th style="text-align: center;">No</th>
-                                                            <th style="text-align: center;">Email</th>
+                                                            <th style="text-align: center;">NIM</th>
                                                             <th style="text-align: center;">Nama</th>
+                                                            <th style="text-align: center;">Program Studi</th>
                                                             <th style="text-align: center;">Jenis Kelamin</th>
+                                                            <th style="text-align: center;">Angkatan</th>
                                                             <th style="text-align: center;">Aksi</th>
                                                        </tr>
                                                   </thead>

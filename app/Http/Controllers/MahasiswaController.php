@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Yajra\Datatables\Datatables;
 use App\Models\Mahasiswa;
+use App\Models\User;
+use App\Models\Prodi;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\MahasiswaImport;
 use Validator;
 
 class MahasiswaController extends Controller
@@ -13,7 +17,7 @@ class MahasiswaController extends Controller
      public function index(Request $request)
      {
           if ($request->ajax()) {
-               $data = Mahasiswa::orderBy('created_at','desc')->get();
+               $data = Mahasiswa::with('prodi')->orderBy('created_at','desc')->get();
                return Datatables::of($data)
                     ->addIndexColumn()
                     ->editColumn('aksi', function($row) {
@@ -27,6 +31,13 @@ class MahasiswaController extends Controller
                     ->editColumn('jenis_kelamin', function($row) {
                          return ucwords($row->jenis_kelamin);
                     })
+                    ->editColumn('nama', function($row) {
+                         if($row->status_ketua == 'ya'){
+                              return $row->nama.' <br><span class="badge badge-primary">Ketua Tingkat</span>';
+                         }else{
+                              return $row->nama;
+                         }
+                    })
                     ->editColumn('email', function($row) {
                          if($row->email == null)
                          {
@@ -35,10 +46,19 @@ class MahasiswaController extends Controller
                               return $row->email;
                          }
                     })
+                    ->editColumn('prodi', function($row) {
+                         if(isset($row->prodi->nama))
+                         {
+                              return $row->prodi->nama;
+                         }else{
+                              return '-';
+                         }
+                    })
                     ->escapeColumns([])
                     ->make(true);
           }
-          return view('pages.mahasiswa.index');
+          $prodi = Prodi::get();
+          return view('pages.mahasiswa.index')->with('prodi',$prodi);
      }
 
      public function simpan(Request $request)
@@ -46,16 +66,15 @@ class MahasiswaController extends Controller
           if($request->input())
           {
                $validator = Validator::make($request->all(), [
-                         'nama'         => 'required|unique:customer,nama',
-                         'email'        => 'nullable|email|unique:customer,email',
-                         'no_hp'        => 'nullable|numeric|min:11'
+                         'nama'         => 'required',
+                         'email'        => 'required|email|unique:mahasiswa,email',
+                         'nim'          => 'required|numeric'
                     ],
                     [
                          'unique'       => 'Data sudah tersimpan didatabase',
                          'required'     => 'Tidak boleh kosong',
                          'email'        => 'Alamat email tidak valid',
                          'numeric'      => 'Hanya boleh menginput angka',
-                         'min'          => 'Minimal 11 angka',
                     ]
                );
                
@@ -64,10 +83,23 @@ class MahasiswaController extends Controller
                     $data = new Mahasiswa();
                     $data->nama = $request->input('nama');
                     $data->email = $request->input('email');
-                    $data->no_hp = $request->input('no_hp');
+                    $data->prodi_id = $request->input('prodi_id');
+                    $data->nim = $request->input('nim');
                     $data->jenis_kelamin = $request->input('jenis_kelamin');
+                    $data->status_ketua = $request->input('status_ketua');
+                    $data->tahun_angkatan = $request->input('tahun_angkatan');
                     $data->created_at = now();
                     
+                    if($data->status_ketua == 'ya')
+                    {
+                         $user = new User();
+                         $user->name = $request->input('nama');
+                         $user->email = $request->input('email');
+                         $user->password = bcrypt($request->input('email'));
+                         $user->roles = 'mahasiswa';
+                         $user->status = 'aktif';
+                         $user->save();
+                    }
                     
                     if($data->save()){
                          $msg = array(
@@ -98,28 +130,54 @@ class MahasiswaController extends Controller
           if($request->input())
           {
                $validator = Validator::make($request->all(), [
-                         'nama'         => 'required|unique:customer,nama,'.$request->input('id'),
-                         'email'        => 'nullable|email|unique:customer,email,'.$request->input('id'),
-                         'no_hp'        => 'nullable|numeric|min:11'
-                    ],
-                    [
-                          'unique'       => 'Data sudah tersimpan didatabase',
-                         'required'     => 'Tidak boleh kosong',
-                         'email'        => 'Alamat email tidak valid',
-                         'numeric'      => 'Hanya boleh menginput angka',
-                         'min'          => 'Minimal 11 angka',
-                    ]
-               );
+                    'nama'         => 'required',
+                    'email'        => 'required|email|unique:mahasiswa,email,'.$request->input('id'),
+                    'nim'          => 'required|numeric'
+               ],
+               [
+                    'unique'       => 'Data sudah tersimpan didatabase',
+                    'required'     => 'Tidak boleh kosong',
+                    'email'        => 'Alamat email tidak valid',
+                    'numeric'      => 'Hanya boleh menginput angka',
+               ]
+          );
           
                if ($validator->passes()) {
                     $data = Mahasiswa::find($request->input('id'));
                     $data->nama = $request->input('nama');
                     $data->email = $request->input('email');
-                    $data->no_hp = $request->input('no_hp');
+                    $data->prodi_id = $request->input('prodi_id');
+                    $data->nim = $request->input('nim');
                     $data->jenis_kelamin = $request->input('jenis_kelamin');
+                    $data->status_ketua = $request->input('status_ketua');
+                    $data->tahun_angkatan = $request->input('tahun_angkatan');
 
                     $data->updated_at = now();
                     
+                    $user = User::where('email',$request->input('email'))->first();
+                    if(isset($user->status_ketua))
+                    {
+                         if($data->status_ketua == 'tidak')
+                         {
+                         
+                              $user->status = 'tidak aktif';
+                              $user->save();
+                         }else{
+                              $user->status = 'aktif';
+                              $user->save();
+                         }
+                    }else{
+                         if($data->status_ketua == 'ya')
+                         {
+                              $user = new User();
+                              $user->name = $request->input('nama');
+                              $user->email = $request->input('email');
+                              $user->password = bcrypt($request->input('email'));
+                              $user->roles = 'mahasiswa';
+                              $user->status = 'aktif';
+                              $user->save();
+                         }
+                    }
 
                     if($data->save()){
                          $msg = array(
@@ -200,13 +258,13 @@ class MahasiswaController extends Controller
                $data['status'] = false;
           endif;
 
-          if ($validator->errors()->has('no_hp')):
-               $data['input_error'][] = 'no_hp';
-               $data['error_string'][] = $validator->errors()->first('no_hp');
+          if ($validator->errors()->has('nim')):
+               $data['input_error'][] = 'nim';
+               $data['error_string'][] = $validator->errors()->first('nim');
                $data['status'] = false;
                $data['class_string'][] = 'is-invalid';
           else:
-               $data['input_error'][] = 'no_hp';
+               $data['input_error'][] = 'nim';
                $data['error_string'][] = '';
                $data['class_string'][] = 'is-valid';
                $data['status'] = false;
@@ -216,6 +274,32 @@ class MahasiswaController extends Controller
           return $data;
      }
 
+     public function upload(Request $request) 
+	{
+		$this->validate($request, [
+			'file' => 'required|mimes:xls,xlsx'
+		]);
+ 
+		$file = $request->file('file');
+		$nama_file = rand().$file->getClientOriginalName();
+          $path = $file->storeAs('public/excel/upload/mahasiswa/',$nama_file);
+		$data = Excel::import(new MahasiswaImport, storage_path('app/public/excel/upload/mahasiswa/'.$nama_file));
 
+          if($data){
+               $msg = array(
+                    'success' => true, 
+                    'message' => 'Data berhasil diupload!',
+                    'status' => TRUE
+               );
+               return response()->json($msg);
+          }else{
+               $msg = array(
+                    'success' => false, 
+                    'message' => 'Data gagal diupload!',
+                    'status' => TRUE
+               );
+               return response()->json($msg);
+          }
+	}
     
 }

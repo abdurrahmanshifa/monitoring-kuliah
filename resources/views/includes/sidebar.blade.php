@@ -36,12 +36,5 @@
                @endif
           </ul>
      </li>
-     <li class="menu-header">Transaction</li>
-     <li class="{{ request()->is('transaction/tenant') ? 'active' : '' }}">
-          <a class="nav-link" href="{{ route('transaction.tenant') }}">
-               <i class="fas fa-credit-card"></i>
-               <span> Transaction Tenant</span>
-          </a>
-     </li>
 </ul>
 </aside>

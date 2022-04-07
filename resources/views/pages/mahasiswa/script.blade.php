@@ -7,13 +7,15 @@
         serverSide: true,
         info :true,
         ajax: {
-            url: "{{ route('master.customer') }}",
+            url: "{{ route('master.mahasiswa') }}",
         },
         columns: [
             {"data":"DT_RowIndex"},
-            {"data":"email"},
+            {"data":"nim"},
             {"data":"nama"},
+            {"data":"prodi"},
             {"data":"jenis_kelamin"},
+            {"data":"tahun_angkatan"},
             {"data":"aksi"},
         ],
         columnDefs: [
@@ -43,9 +45,9 @@
           var form = $('[name="form_data"]')[0];
           var data = new FormData(form);
           if(save_method == 'add'){
-               var url = '{{route("master.customer.simpan")}}';
+               var url = '{{route("master.mahasiswa.simpan")}}';
           }else{
-               var url = '{{route("master.customer.ubah")}}';
+               var url = '{{route("master.mahasiswa.ubah")}}';
           }
 
           $.ajax({
@@ -106,6 +108,8 @@
           $('#modal_form').modal('show');
           $('.modal-title').text('Tambah Data');
           $('[name="jenis_kelamin"]').val('laki-laki').change();
+          $('[name="prodi_id"]').val('').change();
+          $('[name="status_ketua"]').val('tidak').change();
      });
 
      function ubah(id)
@@ -117,7 +121,7 @@
           $('.invalid-feedback').html('');
 
           $.ajax({
-               url : "{{url('master/customer/data/')}}"+"/"+id,
+               url : "{{url('master/mahasiswa/data/')}}"+"/"+id,
                type: "GET",
                dataType: "JSON",
                success: function(data){
@@ -126,8 +130,11 @@
                     $('[name="id"]').val(data.id);
                     $('[name="nama"]').val(data.nama);
                     $('[name="email"]').val(data.email);
-                    $('[name="no_hp"]').val(data.no_hp);
+                    $('[name="nim"]').val(data.nim);
                     $('[name="jenis_kelamin"]').val(data.jenis_kelamin).change();
+                    $('[name="prodi_id"]').val(data.prodi_id).change();
+                    $('[name="tahun_angkatan"]').val(data.tahun_angkatan);
+                    $('[name="status_ketua"]').val(data.status_ketua).change();
                },
                error: function (jqXHR, textStatus, errorThrown){
                     alert('Error get data from ajax');
@@ -150,7 +157,7 @@
           }).then((result) => {
                if (result.value) {
                     $.ajax({
-                         url : "{{url('master/customer/hapus/')}}"+"/"+id,
+                         url : "{{url('master/mahasiswa/hapus/')}}"+"/"+id,
                          type: "POST",
                          data : {
                               '_method'   : 'delete',
@@ -188,5 +195,75 @@
 
           });
      }
+
+     $(".upload").click(function(){
+          $('#form_excel')[0].reset();
+          $(".form-control").removeClass("is-invalid");
+          $(".form-control").removeClass("is-valid");
+          $('.invalid-feedback').html('');
+          $('#modal_excel').modal('show');
+          $('.modal-title').text('Tambah Data');
+     });
+
+     $("[name=form_excel]").on('submit', function(e) {
+          e.preventDefault();
+          $(".form-control").removeClass("is-invalid");
+          $(".form-control").removeClass("is-valid");
+          $('.invalid-feedback').html('');
+          $('#btn').text('Sedang menyimpan...');
+          $('#btn').attr('disabled', true);
+
+          var form = $('[name="form_excel"]')[0];
+          var data = new FormData(form);
+          var url = '{{route("master.mahasiswa.upload")}}';
+
+          $.ajax({
+               url: url,
+               type: 'post',
+               data: data,
+               processData: false,
+               contentType: false,
+               cache: false,
+               success: function(obj) {
+                    if(obj.status)
+                    {
+                         if (obj.success !== true) {
+                         Swal.fire({
+                              text: obj.message,
+                              title: "Perhatian!",
+                              icon: "error",
+                              button: true,
+                              timer: 1000
+                         });
+                         }
+                         else {
+                         $('#modal_excel').modal('hide');
+                         Swal.fire({
+                                   text: obj.message,
+                                   title: "Perhatian !",
+                                   icon: "success",
+                                   button: true,
+                                   }).then((result) => {
+                                        if (result.value) {
+                                             table_data();
+                                        }
+                              });
+                         
+                         }
+                         $('#btn').text('Simpan');
+                         $('#btn').attr('disabled', false);
+                    }else{
+                         for (var i = 0; i < obj.input_error.length; i++) 
+                         {
+                              $('[name="'+obj.input_error[i]+'"]').parent().parent().addClass('has-error');
+                              $('[name="'+obj.input_error[i]+'"]').next().text(obj.error_string[i]);
+                              $('[name="'+obj.input_error[i]+'"]').addClass(obj.class_string[i]);
+                         }
+                         $('#btn').text('Simpan');
+                         $('#btn').attr('disabled', false);
+                    }
+               }
+          });
+     });
 
 </script>
