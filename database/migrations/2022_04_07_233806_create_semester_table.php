@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDosenTable extends Migration
+class CreateSemesterTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateDosenTable extends Migration
      */
     public function up()
     {
-        Schema::create('dosen', function (Blueprint $table) {
+        Schema::create('semester', function (Blueprint $table) {
             $table->id();
-            $table->integer('prodi_id')->nullable();
-            $table->string('nidn')->nullable();
-            $table->string('nama')->nullable();
-            $table->text('keterangan')->nullable();
+            $table->string('nama');
+            $table->string('tahun');
+            $table->enum('status',['aktif','tidak aktif'])->default('tidak aktif');
             $table->timestamps();
             $table->softdeletes();
         });
@@ -31,6 +30,6 @@ class CreateDosenTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dosen');
+        Schema::dropIfExists('semester');
     }
 }

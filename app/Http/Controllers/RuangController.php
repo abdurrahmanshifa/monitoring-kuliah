@@ -5,16 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Yajra\Datatables\Datatables;
-use App\Models\User;
-use App\Models\Prodi;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Ruang;
+use App\Imports\RuangImport;
 use Validator;
 
-class PenggunaController extends Controller
+class RuangController extends Controller
 {
      public function index(Request $request)
      {
           if ($request->ajax()) {
-               $data = User::with('prodi')->orderBy('created_at','desc')->get();
+               $data = Ruang::orderBy('created_at','desc')->get();
                return Datatables::of($data)
                     ->addIndexColumn()
                     ->editColumn('aksi', function($row) {
@@ -25,22 +26,20 @@ class PenggunaController extends Controller
 
                          return $data;
                     })
-                    ->editColumn('roles', function($row) {
-                         if($row->roles == 'prodi' || $row->roles == 'mahasiswa'){
-                              return '<span class="badge badge-primary">'.ucwords($row->roles).' : '.$row->prodi->nama.'</span>';
-                         }else{
-                              return  '<span class="badge badge-primary">'.ucwords($row->roles).'</span>';
-                         }
-                    })
-                    ->editColumn('status', function($row) {
-                         return ucwords($row->status);
+                    ->editColumn('keterangan', function($row) {
+                        if($row->keterangan != null)
+                        {
+                             $data =  $row->keterangan;
+                        }else{
+                             $data = '-';
+                        }
+
+                         return $data;
                     })
                     ->escapeColumns([])
                     ->make(true);
           }
-          $prodi = Prodi::get();
-          return view('pages.pengguna.index')
-          ->with('prodi',$prodi);
+          return view('pages.ruang.index');
      }
 
      public function simpan(Request $request)
@@ -48,36 +47,20 @@ class PenggunaController extends Controller
           if($request->input())
           {
                $validator = Validator::make($request->all(), [
-                         'name'         => 'required|unique:users,name',
-                         'email'        => 'required|email|unique:users,email',
-                         'password'        => 'required'
+                         'nama'         => 'required',
                     ],
                     [
-                         'unique'       => 'Data sudah tersimpan didatabase',
                          'required'     => 'Tidak boleh kosong',
-                         'email'        => 'Alamat email tidak valid',
-                         'min'          => 'Minimal 6 huruf',
                     ]
                );
                
           
                if ($validator->passes()) {
-                    $data = new User();
-                    $data->name = $request->input('name');
-                    $data->email = $request->input('email');
-                    $data->password = bcrypt($request->input('password'));
-                    $data->roles = $request->input('roles');
-                    $data->status = $request->input('status');
-                    if($request->input('roles') == 'prodi')
-                    {
-                         $data->prodi_id = $request->input('prodi_id');
-                    }else{
-                         $data->prodi_id = 0;
-                    }
-                    
+                    $data = new Ruang();
+                    $data->nama = $request->input('nama');
+                    $data->keterangan = $request->input('keterangan');
                     $data->created_at = now();
-                    
-                    
+
                     if($data->save()){
                          $msg = array(
                               'success' => true, 
@@ -107,36 +90,17 @@ class PenggunaController extends Controller
           if($request->input())
           {
                $validator = Validator::make($request->all(), [
-                         'name'         => 'required|unique:users,name,'.$request->input('id'),
-                         'email'        => 'required|email|unique:users,email,'.$request->input('id'),
-                         'password'        => 'nullable'
+                         'nama'         => 'required',
                     ],
                     [
-                         'unique'       => 'Data sudah tersimpan didatabase',
                          'required'     => 'Tidak boleh kosong',
-                         'email'        => 'Alamat email tidak valid',
-                         'min'          => 'Minimal 6 huruf',
                     ]
                );
           
                if ($validator->passes()) {
-                    $data = User::find($request->input('id'));
-                    $data->name = $request->input('name');
-                    $data->email = $request->input('email');
-                    if($request->input('password') != null)
-                    {
-                         $data->password = bcrypt($request->input('password'));
-                    }
-                    $data->roles = $request->input('roles');
-                    $data->status = $request->input('status');
-
-                    if($request->input('roles') == 'prodi')
-                    {
-                         $data->prodi_id = $request->input('prodi_id');
-                    }else{
-                         $data->prodi_id = 0;
-                    }
-
+                    $data = Ruang::find($request->input('id'));
+                    $data->nama = $request->input('nama');
+                    $data->keterangan = $request->input('keterangan');
                     $data->updated_at = now();
                     
 
@@ -166,13 +130,13 @@ class PenggunaController extends Controller
 
      public function data($id)
      {
-          $data = User::where('id', $id)->first();
+          $data = Ruang::where('id', $id)->first();
           return response()->json($data);
      }
 
      public function hapus(Request $request , $id)
      {
-          $data = User::find($id);
+          $data = Ruang::find($id);
           if($data->delete()){
                $msg = array(
                     'success' => true, 
@@ -195,46 +159,46 @@ class PenggunaController extends Controller
           $data['error_string'] = array();
           $data['input_error'] = array();
 
-          if ($validator->errors()->has('name')):
-               $data['input_error'][] = 'name';
-               $data['error_string'][] = $validator->errors()->first('name');
+          if ($validator->errors()->has('nama')):
+               $data['input_error'][] = 'nama';
+               $data['error_string'][] = $validator->errors()->first('nama');
                $data['status'] = false;
                $data['class_string'][] = 'is-invalid';
           else:
-               $data['input_error'][] = 'name';
+               $data['input_error'][] = 'nama';
                $data['error_string'][] = '';
                $data['class_string'][] = 'is-valid';
                $data['status'] = false;
           endif;
-
-          if ($validator->errors()->has('email')):
-               $data['input_error'][] = 'email';
-               $data['error_string'][] = $validator->errors()->first('email');
-               $data['status'] = false;
-               $data['class_string'][] = 'is-invalid';
-          else:
-               $data['input_error'][] = 'email';
-               $data['error_string'][] = '';
-               $data['class_string'][] = 'is-valid';
-               $data['status'] = false;
-          endif;
-
-          if ($validator->errors()->has('password')):
-               $data['input_error'][] = 'password';
-               $data['error_string'][] = $validator->errors()->first('password');
-               $data['status'] = false;
-               $data['class_string'][] = 'is-invalid';
-          else:
-               $data['input_error'][] = 'password';
-               $data['error_string'][] = '';
-               $data['class_string'][] = 'is-valid';
-               $data['status'] = false;
-          endif;
-
 
           return $data;
      }
 
+     public function upload(Request $request) 
+	{
+		$this->validate($request, [
+			'file' => 'required|mimes:xls,xlsx'
+		]);
+ 
+		$file = $request->file('file');
+		$nama_file = rand().$file->getClientOriginalName();
+          $path = $file->storeAs('public/excel/upload/prodi/',$nama_file);
+		$data = Excel::import(new RuangImport, storage_path('app/public/excel/upload/prodi/'.$nama_file));
 
-    
+          if($data){
+               $msg = array(
+                    'success' => true, 
+                    'message' => 'Data berhasil diupload!',
+                    'status' => TRUE
+               );
+               return response()->json($msg);
+          }else{
+               $msg = array(
+                    'success' => false, 
+                    'message' => 'Data gagal diupload!',
+                    'status' => TRUE
+               );
+               return response()->json($msg);
+          }
+	}
 }

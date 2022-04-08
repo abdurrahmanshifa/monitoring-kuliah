@@ -34,10 +34,10 @@
                </div>
                <div class="card-wrap">
                     <div class="card-header">
-                         <h4>Tenant</h4>
+                         <h4>Dosen</h4>
                     </div>
                     <div class="card-body">
-                        
+                         {{ \App\Models\Dosen::count() }}
                     </div>
                </div>
           </div>
@@ -49,10 +49,10 @@
                </div>
                <div class="card-wrap">
                     <div class="card-header">
-                         <h4>Transaction</h4>
+                         <h4>Mata Kuliah</h4>
                     </div>
                     <div class="card-body">
-                         
+                    {{ \App\Models\MataKuliah::count() }}
                     </div>
                </div>
           </div>
@@ -64,10 +64,10 @@
                </div>
                <div class="card-wrap">
                     <div class="card-header">
-                         <h4>Customer</h4>
+                         <h4>Mahasiswa</h4>
                     </div>
                     <div class="card-body">
-                         
+                    {{ \App\Models\Mahasiswa::count() }}
                     </div>
                </div>
           </div>

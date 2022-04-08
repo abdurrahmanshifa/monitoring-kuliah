@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class isAdmin
+class IsProdi
 {
     /**
      * Handle an incoming request.
@@ -16,7 +16,7 @@ class isAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (\Auth::user() &&  \Auth::user()->roles == 'admin') {
+        if (\Auth::user() &&  \Auth::user()->roles == 'prodi' || \Auth::user()->roles == 'admin') {
             return $next($request);
         }
         else if(\Auth::user()->roles == 'mahasiswa'){

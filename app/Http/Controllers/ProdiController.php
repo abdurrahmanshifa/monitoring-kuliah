@@ -15,7 +15,12 @@ class ProdiController extends Controller
      public function index(Request $request)
      {
           if ($request->ajax()) {
-               $data = Prodi::orderBy('created_at','desc')->get();
+               if(\Auth::user()->roles == 'prodi')
+               {
+                   $data = Prodi::where('id',\Auth::user()->prodi_id)->orderBy('created_at', 'desc')->get();
+               }else{
+                   $data = Prodi::orderBy('created_at', 'desc')->get();
+               }
                return Datatables::of($data)
                     ->addIndexColumn()
                     ->editColumn('aksi', function($row) {
