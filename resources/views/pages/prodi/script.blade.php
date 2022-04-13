@@ -105,6 +105,9 @@
           $('#modal_form').modal('show');
           $('.modal-title').text('Tambah Data');
           $('[name="jenis_kelamin"]').val('laki-laki').change();
+          @if(\Auth::user()->roles == 'prodi')
+               $('#btn').attr('style','display:block');
+          @endif
      });
 
      $(".upload").click(function(){
@@ -134,6 +137,9 @@
                     $('[name="id"]').val(data.id);
                     $('[name="nama"]').val(data.nama);
                     $('[name="keterangan"]').val(data.keterangan);
+                    @if(\Auth::user()->roles == 'prodi')
+                         $('#btn').attr('style','display:none');
+                    @endif
                },
                error: function (jqXHR, textStatus, errorThrown){
                     alert('Error get data from ajax');

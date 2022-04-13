@@ -110,6 +110,9 @@
           $('[name="jenis_kelamin"]').val('laki-laki').change();
           $('[name="prodi_id"]').val('').change();
           $('[name="status_ketua"]').val('tidak').change();
+          @if(\Auth::user()->roles == 'prodi')
+               $('#btn').attr('style','display:block');
+          @endif
      });
 
      function ubah(id)
@@ -135,6 +138,9 @@
                     $('[name="prodi_id"]').val(data.prodi_id).change();
                     $('[name="tahun_angkatan"]').val(data.tahun_angkatan);
                     $('[name="status_ketua"]').val(data.status_ketua).change();
+                    @if(\Auth::user()->roles == 'prodi')
+                         $('#btn').attr('style','display:none');
+                    @endif
                },
                error: function (jqXHR, textStatus, errorThrown){
                     alert('Error get data from ajax');

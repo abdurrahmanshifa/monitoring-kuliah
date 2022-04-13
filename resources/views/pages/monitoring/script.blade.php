@@ -17,6 +17,7 @@
             {"data":"ruang"},
             {"data":"jumlah_mahasiswa"},
             {"data":"semester"},
+            {"data":"prodi"},
             {"data":"aksi"},
         ],
         columnDefs: [

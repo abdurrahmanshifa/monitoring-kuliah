@@ -63,6 +63,11 @@ class InputController extends Controller
                          $data = $row->ruang->nama;
                          return $data;
                     })
+                    ->editColumn('prodi', function($row) {
+                         
+                         $data = $row->prodi->nama;
+                         return $data;
+                    })
                     ->editColumn('semester', function($row) {
                          
                          $data = $row->semester->nama.' Tahun '.$row->semester->tahun;

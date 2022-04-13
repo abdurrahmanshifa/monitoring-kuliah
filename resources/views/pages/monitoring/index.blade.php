@@ -49,6 +49,7 @@
                                                             <th style="text-align: center;">Ruang</th>
                                                             <th style="text-align: center;">Jumlah Mahasiswa</th>
                                                             <th style="text-align: center;">Semester</th>
+                                                            <th style="text-align: center;">Prodi</th>
                                                             <th style="text-align: center;">Aksi</th>
                                                        </tr>
                                                   </thead>

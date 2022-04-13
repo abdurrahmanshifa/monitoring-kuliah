@@ -73,6 +73,11 @@
                <i class="far fa-file-alt"></i>  <span>Perkuliahan</span>
           </a>
      </li>
+     <li class="{{ request()->is('rekapan') ? 'active' : '' }}">
+          <a class="nav-link" href="{{ route('laporan.rekapan') }}">
+               <i class="far fa-copy"></i>  <span>Rekapan</span>
+          </a>
+     </li>
      @endif
 </ul>
 </aside>

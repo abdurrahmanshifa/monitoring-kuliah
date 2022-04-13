@@ -12,6 +12,7 @@ use App\Http\Controllers\InputController;
 use App\Http\Controllers\ProdiController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SemesterController;
+use App\Http\Controllers\RekapanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,8 +32,11 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('/', function () {
         return redirect('dashboard');
     });
-    Route::middleware(['admin'])->group(function () {
+    Route::middleware(['prodi'])->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+
+        Route::get('rekapan', [RekapanController::class, 'index'])->name('laporan.rekapan');
+        Route::post('rekapan/cetak', [RekapanController::class, 'cetak'])->name('laporan.rekapan.cetak');
     });
 
     Route::get('perkuliahan', [InputController::class, 'index'])->name('perkuliahan');

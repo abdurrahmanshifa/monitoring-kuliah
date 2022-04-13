@@ -106,6 +106,9 @@
           $('#modal_form').modal('show');
           $('.modal-title').text('Tambah Data');
           $('[name="prodi_id"]').val('').change();
+          @if(\Auth::user()->roles == 'prodi')
+               $('#btn').attr('style','display:block');
+          @endif
      });
 
      function ubah(id)
@@ -127,6 +130,9 @@
                     $('[name="nama"]').val(data.nama);
                     $('[name="prodi_id"]').val(data.prodi_id).change();
                     $('[name="keterangan"]').val(data.keterangan);
+                    @if(\Auth::user()->roles == 'prodi')
+                         $('#btn').attr('style','display:none');
+                    @endif
                },
                error: function (jqXHR, textStatus, errorThrown){
                     alert('Error get data from ajax');

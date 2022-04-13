@@ -22,7 +22,7 @@
                     <div class="card">
                          <div class="card-header">
                               <h4>
-                                   @if (\Auth::user()->roles == 'admin') {
+                                   @if (\Auth::user()->roles == 'admin')
                                    <button class="btn btn-icon btn-lg btn-info tambah" type="button" title="Tambah Data">
                                         <i class="fas fa-plus"></i> Tambah
                                    </button>
