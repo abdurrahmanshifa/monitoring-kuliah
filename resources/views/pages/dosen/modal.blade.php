@@ -30,6 +30,17 @@
                               </div>
                          </div>
                          <div class="form-group row mb-4">
+                              <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Jenis Kelamin</label>
+                              <div class="col-sm-12 col-md-9">
+                                   <select name="jenis_kelamin" class="form-control select2">
+                                        <option value="laki-laki">Laki - Laki</option>
+                                        <option value="perempuan">Perempuan</option>
+                                   </select>
+                                   <div class="invalid-feedback">
+                                   </div>
+                              </div>
+                         </div>
+                         <div class="form-group row mb-4">
                               <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Program Studi</label>
                               <div class="col-sm-12 col-md-9">
                                    <select name="prodi_id" class="form-control select2" required>

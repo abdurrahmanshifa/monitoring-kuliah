@@ -13,6 +13,9 @@ use App\Http\Controllers\ProdiController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SemesterController;
 use App\Http\Controllers\RekapanController;
+use App\Http\Controllers\SurveyController;
+use App\Http\Controllers\PertanyaanController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +30,9 @@ use App\Http\Controllers\RekapanController;
 
 Route::get('login', [LoginController::class, 'index'])->name('login.index');
 Route::post('login', [LoginController::class, 'index'])->name('login');
+
+Route::get('survey', [SurveyController::class, 'index'])->name('survey.index');
+Route::post('survey', [SurveyController::class, 'index'])->name('survey.simpan');
 
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('/', function () {
@@ -97,6 +103,12 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
             Route::post('semester/ubah', [SemesterController::class, 'ubah'])->name('master.semester.ubah');
             Route::get('semester/data/{id}', [SemesterController::class, 'data'])->name('master.semester.data');
             Route::delete('semester/hapus/{id}', [SemesterController::class, 'hapus'])->name('master.semester.hapus');
+
+            Route::get('pertanyaan-survey', [PertanyaanController::class, 'index'])->name('master.pertanyaan-survey');
+            Route::post('pertanyaan-survey/simpan', [PertanyaanController::class, 'simpan'])->name('master.pertanyaan-survey.simpan');
+            Route::post('pertanyaan-survey/ubah', [PertanyaanController::class, 'ubah'])->name('master.pertanyaan-survey.ubah');
+            Route::get('pertanyaan-survey/data/{id}', [PertanyaanController::class, 'data'])->name('master.pertanyaan-survey.data');
+            Route::delete('pertanyaan-survey/hapus/{id}', [PertanyaanController::class, 'hapus'])->name('master.pertanyaan-survey.hapus');
         });
     });
 

@@ -7,14 +7,12 @@
         serverSide: true,
         info :true,
         ajax: {
-            url: "{{ route('master.dosen') }}",
+            url: "{{ route('master.pertanyaan-survey') }}",
         },
         columns: [
             {"data":"DT_RowIndex"},
-            {"data":"nidn"},
             {"data":"nama"},
-            {"data":"jenis_kelamin"},
-            {"data":"prodi"},
+            {"data":"keterangan"},
             {"data":"aksi"},
         ],
         columnDefs: [
@@ -44,9 +42,9 @@
           var form = $('[name="form_data"]')[0];
           var data = new FormData(form);
           if(save_method == 'add'){
-               var url = '{{route("master.dosen.simpan")}}';
+               var url = '{{route("master.pertanyaan-survey.simpan")}}';
           }else{
-               var url = '{{route("master.dosen.ubah")}}';
+               var url = '{{route("master.pertanyaan-survey.ubah")}}';
           }
 
           $.ajax({
@@ -106,10 +104,10 @@
           $('.invalid-feedback').html('');
           $('#modal_form').modal('show');
           $('.modal-title').text('Tambah Data');
+          $('[name="status"]').val('aktif').change();
           @if(\Auth::user()->roles == 'prodi')
                $('#btn').attr('style','display:block');
           @endif
-          $('[name="jenis_kelamin"]').val('laki-laki').change();
      });
 
      function ubah(id)
@@ -121,7 +119,7 @@
           $('.invalid-feedback').html('');
 
           $.ajax({
-               url : "{{url('master/dosen/data/')}}"+"/"+id,
+               url : "{{url('master/pertanyaan-survey/data/')}}"+"/"+id,
                type: "GET",
                dataType: "JSON",
                success: function(data){
@@ -129,10 +127,7 @@
                     $('.modal-title').text('Ubah data');
                     $('[name="id"]').val(data.id);
                     $('[name="nama"]').val(data.nama);
-                    $('[name="nidn"]').val(data.nidn);
-                    $('[name="keterangan"]').html(data.keterangan);
-                    $('[name="jenis_kelamin"]').val(data.jenis_kelamin).change();
-                    $('[name="prodi_id"]').val(data.prodi_id).change();
+                    $('[name="keterangan"]').val(data.keterangan);
                     @if(\Auth::user()->roles == 'prodi')
                          $('#btn').attr('style','display:none');
                     @endif
@@ -158,7 +153,7 @@
           }).then((result) => {
                if (result.value) {
                     $.ajax({
-                         url : "{{url('master/dosen/hapus/')}}"+"/"+id,
+                         url : "{{url('master/pertanyaan-survey/hapus/')}}"+"/"+id,
                          type: "POST",
                          data : {
                               '_method'   : 'delete',
@@ -196,75 +191,5 @@
 
           });
      }
-
-     $(".upload").click(function(){
-          $('#form_excel')[0].reset();
-          $(".form-control").removeClass("is-invalid");
-          $(".form-control").removeClass("is-valid");
-          $('.invalid-feedback').html('');
-          $('#modal_excel').modal('show');
-          $('.modal-title').text('Tambah Data');
-     });
-
-     $("[name=form_excel]").on('submit', function(e) {
-          e.preventDefault();
-          $(".form-control").removeClass("is-invalid");
-          $(".form-control").removeClass("is-valid");
-          $('.invalid-feedback').html('');
-          $('#btn').text('Sedang menyimpan...');
-          $('#btn').attr('disabled', true);
-
-          var form = $('[name="form_excel"]')[0];
-          var data = new FormData(form);
-          var url = '{{route("master.dosen.upload")}}';
-
-          $.ajax({
-               url: url,
-               type: 'post',
-               data: data,
-               processData: false,
-               contentType: false,
-               cache: false,
-               success: function(obj) {
-                    if(obj.status)
-                    {
-                         if (obj.success !== true) {
-                         Swal.fire({
-                              text: obj.message,
-                              title: "Perhatian!",
-                              icon: "error",
-                              button: true,
-                              timer: 1000
-                         });
-                         }
-                         else {
-                         $('#modal_excel').modal('hide');
-                         Swal.fire({
-                                   text: obj.message,
-                                   title: "Perhatian !",
-                                   icon: "success",
-                                   button: true,
-                                   }).then((result) => {
-                                        if (result.value) {
-                                             table_data();
-                                        }
-                              });
-                         
-                         }
-                         $('#btn').text('Simpan');
-                         $('#btn').attr('disabled', false);
-                    }else{
-                         for (var i = 0; i < obj.input_error.length; i++) 
-                         {
-                              $('[name="'+obj.input_error[i]+'"]').parent().parent().addClass('has-error');
-                              $('[name="'+obj.input_error[i]+'"]').next().text(obj.error_string[i]);
-                              $('[name="'+obj.input_error[i]+'"]').addClass(obj.class_string[i]);
-                         }
-                         $('#btn').text('Simpan');
-                         $('#btn').attr('disabled', false);
-                    }
-               }
-          });
-     });
 
 </script>

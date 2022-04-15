@@ -12,6 +12,8 @@ use App\Models\MataKuliah;
 use App\Models\Dosen;
 use App\Models\Ruang;
 use App\Models\Semester;
+use App\Models\Survey;
+use App\Models\SurveyPertanyaan;
 use Validator;
 use Auth;
 use PDF;
@@ -56,6 +58,8 @@ class RekapanController extends Controller
     	          return $pdf->download('laporan-rekapan-pdf');
           }
      }
+
+
 
 
     

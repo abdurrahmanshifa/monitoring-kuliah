@@ -65,6 +65,7 @@
                         </div>
                         <div class="simple-footer">
                             2022 - SiMonik (Sistem Monitoring Perkuliahan)
+                            
                         </div>
                     </div>
                 </div>

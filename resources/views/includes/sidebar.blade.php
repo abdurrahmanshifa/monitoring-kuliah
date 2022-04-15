@@ -64,20 +64,31 @@
                          Semester
                     </a>
                </li>
+               <li class="{{ request()->is('master/pertanyaan-survey') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('master.pertanyaan-survey') }}">
+                         Survey Pertanyaan
+                    </a>
+               </li>
                @endif
           </ul>
      </li>
-     <li class="menu-header">Laporan</li>
+     <li class="menu-header">Monitoring Perkuliahan</li>
      <li class="{{ request()->is('perkuliahan') ? 'active' : '' }}">
           <a class="nav-link" href="{{ route('perkuliahan') }}">
                <i class="far fa-file-alt"></i>  <span>Perkuliahan</span>
           </a>
      </li>
+     <li class="menu-header">Laporan</li>
      <li class="{{ request()->is('rekapan') ? 'active' : '' }}">
           <a class="nav-link" href="{{ route('laporan.rekapan') }}">
-               <i class="far fa-copy"></i>  <span>Rekapan</span>
+               <i class="far fa-copy"></i>  <span>Laporan Perkuliahan</span>
           </a>
      </li>
      @endif
 </ul>
+<div class="mt-4 mb-4 p-3 hide-sidebar-mini">
+     <a href="{{ route('survey.index') }}" target="_blank" class="btn btn-primary btn-lg btn-block btn-icon-split">
+          <i class="fas fa-rocket"></i> Form Survey Penilaian
+     </a>
+</div>
 </aside>

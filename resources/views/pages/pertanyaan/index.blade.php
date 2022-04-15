@@ -2,17 +2,17 @@
 
 @section('title')
      <title>
-          Master Dosen - Sistem Monitoring Perkuliahan
+          Master Pertanyaan - Sistem Monitoring Perkuliahan
      </title>
 @endsection
 
 @section('content')
 <section class="section">
      <div class="section-header">
-          <h1>Dosen</h1>
+          <h1>Pertanyaan</h1>
           <div class="section-header-breadcrumb">
                <div class="breadcrumb-item active"><a href="#">Master Data</a></div>
-               <div class="breadcrumb-item">Dosen</div>
+               <div class="breadcrumb-item">Pertanyaan</div>
           </div>
      </div>
 
@@ -22,21 +22,19 @@
                     <div class="card">
                          <div class="card-header">
                               <h4>
+                                   @if (\Auth::user()->roles == 'admin')
                                    <button class="btn btn-icon btn-lg btn-info tambah" type="button" title="Tambah Data">
                                         <i class="fas fa-plus"></i> Tambah
                                    </button>
+                                   @endif
                                    <button type="button" class="refresh btn btn-icon btn-lg btn-success">
                                         <i class="fas fa-sync-alt"></i> Muat Ulang
                                    </button>
                               </h4>
                               <div class="card-header-form">
-                                   <a class="btn btn-icon btn-warning" href="{{ url('public/excel/upload-dosen.xlsx') }}" title="Download Template Excel">
-                                        <i class="fas fa-file-excel"></i> Download Template Excel
+                                   <a data-collapse="#mycard-collapse" class="btn btn-icon btn-info" href="#">
+                                        <i class="fas fa-minus"></i>
                                    </a>
-                                   <button class="btn btn-icon btn-success upload">
-                                        <i class="fas fa-upload"></i> Upload Template Excel
-                                   </button>
-                                   <a data-collapse="#mycard-collapse" class="btn btn-icon btn-info" href="#"><i class="fas fa-minus"></i></a>
                               </div>
                          </div>
                          <div class="collapse show" id="mycard-collapse" style="">
@@ -47,10 +45,8 @@
                                                   <thead>
                                                        <tr>
                                                             <th style="text-align: center;">No</th>
-                                                            <th style="text-align: center;">NIDN</th>
                                                             <th style="text-align: center;">Nama</th>
-                                                            <th style="text-align: center;">Jenis Kelamin</th>
-                                                            <th style="text-align: center;">Program Studi</th>
+                                                            <th style="text-align: center;">Keterangan</th>
                                                             <th style="text-align: center;">Aksi</th>
                                                        </tr>
                                                   </thead>
@@ -70,9 +66,9 @@
 @endsection
 
 @section('modal')
-     @include('pages.dosen.modal')     
+     @include('pages.pertanyaan.modal')     
 @endsection
 
 @section('script')
-     @include('pages.dosen.script')
+     @include('pages.pertanyaan.script')
 @endsection

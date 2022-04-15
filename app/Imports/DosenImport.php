@@ -23,12 +23,13 @@ class DosenImport implements ToCollection
             if ($key != 0) {
                 if($row[0] != null){
 
-                    $prodi = Prodi::where('nama',$row[2])->first();
+                    $prodi = Prodi::where('nama',$row[3])->first();
                     Dosen::create([
                         'nidn'              => $row[0],
-                        'prodi_id'          => (isset($prodi->id)?$prodi->id:null),
+                        'prodi_id'          => (isset($prodi->id)?isset($prodi->id):''),
                         'nama'              => $row[1],
-                        'keterangan'        => $row[3],
+                        'jenis_kelamin'     => $row[2],
+                        'keterangan'        => $row[4],
                     ]);
                 }else{
                     break;
