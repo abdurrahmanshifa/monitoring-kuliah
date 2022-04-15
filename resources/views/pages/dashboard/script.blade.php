@@ -230,19 +230,19 @@
           ],
           series: [{
                name: 'Sangat Baik',
-               data: {{ json_encode($array['Sangat Baik']) }}
+               data: {{ @json_encode($array['Sangat Baik']) }}
 
           }, {
                name: 'Baik',
-               data: {{ json_encode($array['Baik']) }}
+               data: {{ @json_encode($array['Baik']) }}
 
           }, {
                name: 'Cukup',
-               data: {{ json_encode($array['Cukup']) }}
+               data: {{ @json_encode($array['Cukup']) }}
 
           }, {
                name: 'Kurang',
-               data: {{ json_encode($array['Kurang']) }}
+               data: {{ @json_encode($array['Kurang']) }}
 
           }]
           });

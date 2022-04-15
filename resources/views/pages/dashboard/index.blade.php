@@ -37,7 +37,11 @@
                               <h4>Dosen</h4>
                          </div>
                          <div class="card-body">
-                              {{ \App\Models\Dosen::count() }}
+                              @if(\Auth::user()->roles == 'admin')
+                                   {{ \App\Models\Dosen::count() }}
+                              @else
+                                   {{ \App\Models\Dosen::where('prodi_id',\Auth::user()->prodi_id)->count() }}
+                              @endif
                          </div>
                     </div>
                </div>
@@ -52,7 +56,11 @@
                               <h4>Mata Kuliah</h4>
                          </div>
                          <div class="card-body">
-                         {{ \App\Models\MataKuliah::count() }}
+                         @if(\Auth::user()->roles == 'admin')
+                              {{ \App\Models\MataKuliah::count() }}
+                         @else 
+                              {{ \App\Models\MataKuliah::where('prodi_id',\Auth::user()->prodi_id)->count() }}
+                         @endif
                          </div>
                     </div>
                </div>
@@ -67,7 +75,11 @@
                               <h4>Mahasiswa</h4>
                          </div>
                          <div class="card-body">
-                         {{ \App\Models\Mahasiswa::count() }}
+                         @if(\Auth::user()->roles == 'admin')
+                              {{ \App\Models\Mahasiswa::count() }}
+                         @else 
+                              {{ \App\Models\Mahasiswa::where('prodi_id',\Auth::user()->prodi_id)->count() }}
+                         @endif
                          </div>
                     </div>
                </div>

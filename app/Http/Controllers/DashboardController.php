@@ -35,6 +35,7 @@ class DashboardController extends Controller
         $data['laki'] = $mahasiswa->where('jenis_kelamin','laki-laki')->count();
         $data['perempuan'] = $mahasiswa->where('jenis_kelamin','perempuan')->count();
         $data['dosen'] = $dosen->get();
+        $array = null;
         foreach($data['dosen'] as $key => $val)
         {
             $array['Sangat Baik'][$key] = Survey::where('dosen_id',$val->id)->where('nilai','Sangat Baik')->where('semester_id',$data['semester']->id)->count();
