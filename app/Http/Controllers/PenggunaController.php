@@ -26,8 +26,10 @@ class PenggunaController extends Controller
                          return $data;
                     })
                     ->editColumn('roles', function($row) {
-                         if($row->roles == 'prodi' || $row->roles == 'mahasiswa'){
+                         if($row->roles == 'prodi'){
                               return '<span class="badge badge-primary">'.ucwords($row->roles).' : '.$row->prodi->nama.'</span>';
+                         }else if($row->roles == 'mahasiswa'){
+                              return '<span class="badge badge-primary">'.ucwords($row->roles).' : '.$row->prodi->nama.' (Ketua Tingkat) </span>';
                          }else{
                               return  '<span class="badge badge-primary">'.ucwords($row->roles).'</span>';
                          }
@@ -127,14 +129,15 @@ class PenggunaController extends Controller
                     {
                          $data->password = bcrypt($request->input('password'));
                     }
-                    $data->roles = $request->input('roles');
                     $data->status = $request->input('status');
 
-                    if($request->input('roles') == 'prodi')
-                    {
-                         $data->prodi_id = $request->input('prodi_id');
-                    }else{
-                         $data->prodi_id = 0;
+                    if ($request->input('roles') != null) {
+                        $data->roles = $request->input('roles');
+                        if ($request->input('roles') == 'prodi') {
+                            $data->prodi_id = $request->input('prodi_id');
+                        } else {
+                            $data->prodi_id = 0;
+                        }
                     }
 
                     $data->updated_at = now();

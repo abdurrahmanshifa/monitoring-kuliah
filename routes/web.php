@@ -43,6 +43,9 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
 
         Route::get('rekapan', [RekapanController::class, 'index'])->name('laporan.rekapan');
         Route::post('rekapan/cetak', [RekapanController::class, 'cetak'])->name('laporan.rekapan.cetak');
+
+        Route::get('penilaian', [RekapanController::class, 'penilaian'])->name('laporan.penilaian');
+        Route::post('penilaian/cetak', [RekapanController::class, 'penilaian_cetak'])->name('laporan.penilaian.cetak');
     });
 
     Route::get('perkuliahan', [InputController::class, 'index'])->name('perkuliahan');

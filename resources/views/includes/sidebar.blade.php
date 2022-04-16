@@ -81,7 +81,12 @@
      <li class="menu-header">Laporan</li>
      <li class="{{ request()->is('rekapan') ? 'active' : '' }}">
           <a class="nav-link" href="{{ route('laporan.rekapan') }}">
-               <i class="far fa-copy"></i>  <span>Laporan Perkuliahan</span>
+               <i class="far fa-copy"></i>  <span>Perkuliahan</span>
+          </a>
+     </li>
+     <li class="{{ request()->is('penilaian') ? 'active' : '' }}">
+          <a class="nav-link" href="{{ route('laporan.penilaian') }}">
+               <i class="far fa-copy"></i>  <span>Penilaian Dosen</span>
           </a>
      </li>
      @endif

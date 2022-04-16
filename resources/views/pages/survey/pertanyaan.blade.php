@@ -74,7 +74,7 @@
                                              <option value="">Pilih Salah Satu</option>
                                              <option value="Sangat Baik">Sangat Baik</option>
                                              <option value="Baik">Baik</option>
-                                             <option value="Cukup">Sangat Baik</option>
+                                             <option value="Cukup">Cukup</option>
                                              <option value="Kurang">Kurang</option>
                                         </select>
                                         <div class="invalid-feedback">

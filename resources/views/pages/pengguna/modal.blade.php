@@ -15,10 +15,13 @@
                          <div class="form-group row mb-4">
                               <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Level</label>
                               <div class="col-sm-12 col-md-9">
-                                   <select name="roles" class="form-control select2">
-                                        <option value="admin">Admin</option>
-                                        <option value="prodi">Prodi</option>
-                                   </select>
+                                   <div id="roles">
+                                        <select name="roles" class="form-control select2">
+                                             <option value="admin">Admin</option>
+                                             <option value="prodi">Prodi</option>
+                                        </select>
+                                   </div>
+                                   <label class="roles"></label>
                                    <div class="invalid-feedback">
                                    </div>
                               </div>
@@ -27,7 +30,7 @@
                               <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Prodi</label>
                               <div class="col-sm-12 col-md-9">
                                    <select name="prodi_id" class="form-control select2">
-                                        <option value="0">Pilih Prodi</option>
+                                        <option value="">Pilih Prodi</option>
                                         @foreach($prodi as $val)
                                              <option value="{{ $val->id }}">
                                                  {{ $val->nama }}

@@ -120,6 +120,9 @@
           $('[name="roles"]').val('admin').change();
           $('.info').html('');
           $('.mahasiswa').attr('style','display:none');
+          $('#roles').attr('style','display:block');
+               $('.roles').attr('style','display:none');
+               $('.roles').html('');
      });
 
      function ubah(id)
@@ -142,7 +145,18 @@
                     $('[name="email"]').val(data.email);
                     $('[name="roles"]').val(data.roles).change();
                     $('[name="status"]').val(data.status).change();
+                    $('[name="prodi_id"]').val(data.prodi_id).change();
                     $('.info').html('Kosongkan password, jika tidak diubah');
+                    if(data.roles == 'mahasiswa')
+                    {
+                         $('#roles').attr('style','display:none');
+                         $('.roles').attr('style','display:block');
+                         $('.roles').html(data.roles);
+                    }else{
+                         $('#roles').attr('style','display:block');
+                         $('.roles').attr('style','display:none');
+                         $('.roles').html('');
+                    }
                },
                error: function (jqXHR, textStatus, errorThrown){
                     alert('Error get data from ajax');

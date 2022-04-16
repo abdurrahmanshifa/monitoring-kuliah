@@ -177,13 +177,7 @@ class MahasiswaController extends Controller
                     {
                          if($data->status_ketua == 'tidak')
                          {
-                              $user->prodi_id = $request->input('prodi_id');
-                              $user->status = 'tidak aktif';
-                              $user->save();
-                         }else{
-                              $user->prodi_id = $request->input('prodi_id');
-                              $user->status = 'aktif';
-                              $user->save();
+                              $user->delete();
                          }
                     }else{
                          if($data->status_ketua == 'ya')

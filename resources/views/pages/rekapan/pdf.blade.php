@@ -11,7 +11,7 @@ $judul = 'LAPORAN REKAPAN '.strtoupper($semester->nama).' TAHUN '.strtoupper($se
     </style>
 </head>
 <body>
-<table class="table table-borderless">
+<table class="table-borderless" style="border:none;width:100%">
      <tr>
           <td colspan="7" style="font-weight:600;text-align:center">{{ $judul }}</td>
      </tr>

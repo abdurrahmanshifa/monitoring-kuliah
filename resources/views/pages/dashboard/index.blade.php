@@ -4,6 +4,15 @@
 <title>
     Dashboard - Sistem Monitoring Perkuliahan
 </title>
+<style>
+     .highcharts-container{
+  width: 100% !important;
+}
+
+.highcharts-root{
+  width: 100% !important;
+}
+</style>
 @endsection
 
 @section('content')

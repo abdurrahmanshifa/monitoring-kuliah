@@ -129,7 +129,7 @@
                          </div>
                     </div>
                     <div class="modal-footer bg-whitesmoke br">
-                         @if( \Auth::user()->roles == 'mahasiswa')
+                         @if( \Auth::user()->roles == 'mahasiswa' || \Auth::user()->roles == 'admin')
                          <button type="submit" id="btn" class="btn btn-dark">
                               Simpan
                          </button>

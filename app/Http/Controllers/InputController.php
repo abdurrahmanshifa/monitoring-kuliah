@@ -31,7 +31,7 @@ class InputController extends Controller
                return Datatables::of($data)
                     ->addIndexColumn()
                     ->editColumn('aksi', function($row) {
-                         if (Auth::user()->roles == 'mahasiswa') {
+                         if (Auth::user()->roles == 'mahasiswa' || Auth::user()->roles == 'admin') {
                              $data = '
                                    <a title="Ubah Data" class="btn btn-success btn-icon" onclick="ubah(\''.$row->id.'\')"> <i class="fas fa-edit text-white"></i></a>
                               ';
